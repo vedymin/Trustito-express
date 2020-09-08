@@ -26,13 +26,7 @@ let database = [{ item: 1 }, { item: 2 }, { item: 3 }, { item: 4 }];
 
 app.post("/", (req, res) => {
   // query params are in req.query
-  let newObject = {};
-  for (var propName in req.query) {
-    if (req.query.hasOwnProperty(propName)) {
-      console.log(propName, req.query[propName]);
-      newObject[propName] = req.query[propName];
-    }
-  }
+  let newObject = createObjectFromParameters(req);
   database.push(newObject);
   res.set("Access-Control-Allow-Origin", "*").status(200).json(database);
   // TODO error checking (emtpy res.query etc.)
@@ -52,7 +46,9 @@ app.get("/", (req, res) => {
 app.put("/:id", (req, res) => {
   // query params are in req.query
   // :id is in req.params.id
-  res.set("Access-Control-Allow-Origin", "*").status(200).json({});
+  let newObject = createObjectFromParameters(req);
+  database[req.params.id] = newObject;
+  res.set("Access-Control-Allow-Origin", "*").status(200).json(database);
 });
 
 app.delete("/:id", (req, res) => {
@@ -62,3 +58,14 @@ app.delete("/:id", (req, res) => {
 });
 
 app.listen(8080);
+
+function createObjectFromParameters(request) {
+  let newObject = {};
+  for (var propName in request.query) {
+    if (request.query.hasOwnProperty(propName)) {
+      console.log(propName, request.query[propName]);
+      newObject[propName] = request.query[propName];
+    }
+  }
+  return newObject;
+}
