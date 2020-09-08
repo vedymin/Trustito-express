@@ -41,6 +41,7 @@ app.get("/", (req, res) => {
   }
 
   res.set("Access-Control-Allow-Origin", "*").status(200).json(response);
+  // TODO error checking (emtpy res.query etc.)
 });
 
 app.put("/:id", (req, res) => {
@@ -49,12 +50,15 @@ app.put("/:id", (req, res) => {
   let newObject = createObjectFromParameters(req);
   database[req.params.id] = newObject;
   res.set("Access-Control-Allow-Origin", "*").status(200).json(database);
+  // TODO error checking (emtpy res.query etc.)
 });
 
 app.delete("/:id", (req, res) => {
   // query params are in req.query
   // :id is in req.params.id
-  res.set("Access-Control-Allow-Origin", "*").status(200).json({});
+  database.splice(req.params.id, 1);
+  res.set("Access-Control-Allow-Origin", "*").status(200).json(database);
+  // TODO error checking (emtpy res.query etc.)
 });
 
 app.listen(8080);
