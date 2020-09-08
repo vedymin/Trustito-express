@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 
 // Local databse
-let database = [{ task: 2 }];
+let database = [{ item: 1 }, { item: 2 }, { item: 3 }, { item: 4 }];
 
 // TODO:
 // 1. Add POST request to save data object to database as last element, any query params can be passed
@@ -29,9 +29,20 @@ app.post("/", (req, res) => {
   res.set("Access-Control-Allow-Origin", "*").status(200).json({});
 });
 
+// app.get("/", (req, res) => {
+//   // query params are in req.query
+//   console.log("dziala");
+//   res.set("Access-Control-Allow-Origin", "*").status(200).json(database);
+// });
+
 app.get("/", (req, res) => {
   // query params are in req.query
-  res.set("Access-Control-Allow-Origin", "*").status(200).json(database);
+  let response = database;
+  if (Object.keys(req.query).length !== 0) {
+    response = database.slice(database.length - req.query.last);
+  }
+
+  res.set("Access-Control-Allow-Origin", "*").status(200).json(response);
 });
 
 app.put("/:id", (req, res) => {
