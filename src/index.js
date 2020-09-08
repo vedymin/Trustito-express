@@ -26,14 +26,18 @@ let database = [{ item: 1 }, { item: 2 }, { item: 3 }, { item: 4 }];
 
 app.post("/", (req, res) => {
   // query params are in req.query
-  res.set("Access-Control-Allow-Origin", "*").status(200).json({});
+  let newObject = {};
+  for (var propName in req.query) {
+    if (req.query.hasOwnProperty(propName)) {
+      console.log(propName, req.query[propName]);
+      newObject[propName] = req.query[propName];
+    }
+  }
+  database.push(newObject);
+  res.set("Access-Control-Allow-Origin", "*").status(200).json(database);
+  // TODO error checking (emtpy res.query etc.)
+  // TODO index in response for new objects
 });
-
-// app.get("/", (req, res) => {
-//   // query params are in req.query
-//   console.log("dziala");
-//   res.set("Access-Control-Allow-Origin", "*").status(200).json(database);
-// });
 
 app.get("/", (req, res) => {
   // query params are in req.query
